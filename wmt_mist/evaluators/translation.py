@@ -1,7 +1,7 @@
 import pandas as pd
 
 import json
-from .base_evaluator import BaseEvaluator
+from .base import BaseEvaluator
 
 class TranslationEvaluator(BaseEvaluator):
     """

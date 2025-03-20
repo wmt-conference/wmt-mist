@@ -32,9 +32,8 @@ For each item in the array you need to add the `output` field with your LLM outp
 ```json
 {
   "prompt": "Given this source '''Už se nudím: Přítel je neschopný''' in cs and translation '''Мені вже нудно: Хлопець нездатний''' in uk, assign a score to the translation on a scale from 0 to 100. Output only the score and nothing else.",
-  "output": 80,
+  "output": "80",
 }
-...
 ```
 
 To automatically evaluate, run the `evaluate` command:
