@@ -19,15 +19,8 @@ authors = [
 ]
 keywords = ["evaluation", "multilingual", "natural language generation", "machine translation"]
 dependencies = [
-  "numpy",
-  "pandas",
-  "sacrebleu",
-  "datasets",
-  "scikit-learn",
-  "tqdm",
-  "matplotlib",
-  "requests",
-  "sentence-transformers",
+  # replace with proper WMT loader once it is finished
+  "subset2evaluate  >= 1.0.10",
 ]
 classifiers = [
     'Environment :: Console',

@@ -1,3 +1,4 @@
+from typing import Any, Dict, List
 from abc import ABC, abstractmethod
 
 class BaseDataset(ABC):
@@ -6,14 +7,7 @@ class BaseDataset(ABC):
     """
 
     @abstractmethod
-    def load_data(self):
-        """
-        Loads the dataset into memory or sets up access. 
-        """
-        pass
-
-    @abstractmethod
-    def get_prompts(self):
+    def dump_data(self) -> List[Dict[str, Any]]:
         """
         Returns a list (or dict) of prompts in a consistent format.
         """

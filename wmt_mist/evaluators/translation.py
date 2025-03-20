@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from .base_evaluator import BaseEvaluator
 
-class MTEvaluator(BaseEvaluator):
+class TranslationEvaluator(BaseEvaluator):
     """
     Evaluator for machine translation
     """
