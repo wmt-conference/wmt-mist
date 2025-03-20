@@ -1,11 +1,11 @@
 import argparse
 import json
 
-from mist.datasets.general_mt_dataset import GeneralMTDataset
-from mist.evaluators.mt_evaluator import MTEvaluator
+from datasets.general_mt_dataset import GeneralMTDataset
+from evaluators.mt_evaluator import MTEvaluator
 
 
-def main():
+def main_cli():
     parser = argparse.ArgumentParser(
         description="WMT MIST scoring"
     )
@@ -52,4 +52,4 @@ def main():
         parser.print_help()
 
 if __name__ == "__main__":
-    main()
+    main_cli()

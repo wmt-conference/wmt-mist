@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools >= 65.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["wmt_mist"]
+
+[project]
+name = "wmt-mist"
+version = "0.0.0a0"
+description = "Evaluation package for WMT-MIST Multilingual Instruction Shared Task"
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  {name = "Tom Kocmi", email = "kocmitom@gmail.com"},
+  {name = "Vilém Zouhar", email = "vilem.zouhar@gmail.com"},
+  {name = "Others"},
+]
+keywords = ["evaluation", "multilingual", "natural language generation", "machine translation"]
+dependencies = [
+  "numpy",
+  "pandas",
+  "sacrebleu",
+  "datasets",
+  "scikit-learn",
+  "tqdm",
+  "matplotlib",
+  "requests",
+  "sentence-transformers",
+]
+classifiers = [
+    'Environment :: Console',
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+]
+
+[project.urls]
+Repository = "https://github.com/wmt-conference/wmt-mist"
+Issues = "https://github.com/wmt-conference/wmt-mist/issues"
+
+[project.scripts]
+wmt-mist = "wmt_mist.main:main_cli"
+wmt_mist = "wmt_mist.main:main_cli"
+
+# python3 -m build
+# python3 -m twine upload dist/* -u __token__
+
+# pip install -e . --config-settings editable_mode=strict
