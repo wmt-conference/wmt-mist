@@ -3,7 +3,7 @@ import tqdm
 import wmt_mist.utils
 from .base import BaseDataset
 
-class TranslationDataset(BaseDataset):
+class JudgeTranslationDataset(BaseDataset):
     """
     Skeleton class to handle General MT dataset.
     """
@@ -11,6 +11,8 @@ class TranslationDataset(BaseDataset):
     def __init__(self, dataset):
         if dataset in {"wmt24pp", "wmt24++"}:
             # import here to avoid importing by default
+
+            # TODO: use the dataset for which we have human scores: https://github.com/google-research/mt-metrics-eval/tree/main?tab=readme-ov-file#wmt24-data
             import datasets
             datasets.logging.disable_progress_bar()
             data = []
@@ -30,7 +32,7 @@ class TranslationDataset(BaseDataset):
         line["lang1"] = wmt_mist.utils.get_language_name(lang1)
         line["lang2"] = wmt_mist.utils.get_language_name(lang2)
 
-        return "Translate \'\'\'{source}\'\'\' from {lang1} to {lang2}. Output only the translation and nothing else.".format(**line)
+        return "Consider this source \'\'\'{source}\'\'\' in {lang1} and this translation \'\'\'{target}\'\'\' in {lang2}. Assess the translation quality from 0% to 100%.".format(**line)
 
 
     def dump_data(self) -> List[Dict[str, Any]]:

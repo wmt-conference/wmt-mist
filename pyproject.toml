@@ -19,8 +19,8 @@ authors = [
 ]
 keywords = ["evaluation", "multilingual", "natural language generation", "machine translation"]
 dependencies = [
-  # replace with proper WMT loader once it is finished
-  "subset2evaluate  >= 1.0.10",
+  "datasets >= 2.18",
+  "iso639 >= 0.1",
 ]
 classifiers = [
     'Environment :: Console',

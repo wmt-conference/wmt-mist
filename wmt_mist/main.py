@@ -1,7 +1,7 @@
 import argparse
 import json
 import sys
-from wmt_mist.datasets.evaluation_translation import EvaluationTranslationDataset
+from wmt_mist.datasets.judge_translation import JudgeTranslationDataset
 from .datasets.translation import TranslationDataset
 from .evaluators.translation import TranslationEvaluator
 
@@ -19,15 +19,9 @@ def main_cli():
         choices=["translation", "open-ended", "reasoning", "judge"]
     )
     parser_load.add_argument(
-        "split",
-        help="Dev or test split",
-        choices=["dev", "test"]
-    )
-    parser_load.add_argument(
-        "--year",
-        help="Which year of the testset to load, default is the current",
-        default="2025",
-        choices=["2025"],
+        "dataset",
+        help="Dataset name",
+        choices=["wmt24pp", "wmt24++"]
     )
 
     # sub-command for evaluating results
@@ -38,15 +32,9 @@ def main_cli():
         choices=["translation", "open-ended", "reasoning", "judge"]
     )
     parser_eval.add_argument(
-        "split",
-        help="Dev or test split",
-        choices=["dev", "test"]
-    )
-    parser_eval.add_argument(
-        "--year",
-        help="Which year of the testset to load, default is the current",
-        default="2025",
-        choices=["2025"],
+        "dataset",
+        help="Dataset name",
+        choices=["wmt24pp", "wmt24++"]
     )
     parser_eval.add_argument("answers", help="Path to JSON file with model outputs")
 
@@ -58,58 +46,34 @@ def main_cli():
         choices=["translation", "open-ended", "reasoning", "judge"]
     )
     parser_mock.add_argument(
-        "split",
-        help="Dev or test split",
-        choices=["dev", "test"]
-    )
-    parser_mock.add_argument(
-        "--year",
-        help="Which year of the testset to load, default is the current",
-        default="2025",
-        choices=["2025"],
+        "dataset",
+        help="Dataset name",
+        choices=["wmt24pp", "wmt24++"]
     )
 
     args = parser.parse_args()
 
 
-    if args.command == "load":
-        if args.split == "test":
-            print("Testset prompts are not available yet.", file=sys.stderr)
-        
-        if args.task.lower() == "translation" and args.split.lower() == "dev":
-            prompts = TranslationDataset(year=args.year, split="dev").dump_data()
+    if args.command == "load":        
+        if args.task.lower() == "translation":
+            prompts = TranslationDataset(dataset=args.dataset).dump_data()
             print(json.dumps(prompts, indent=2, ensure_ascii=False))
-        elif args.task.lower() == "open-ended" and args.split.lower() == "dev":
+        elif args.task.lower() == "open-ended":
             print("TODO")
-        elif args.task.lower() == "reasoning" and args.split.lower() == "dev":
+        elif args.task.lower() == "reasoning":
             print("TODO")
-        elif args.task.lower() == "judge" and args.split.lower() == "dev":
-            # TODO: join with open-ended dataset
-            prompts = EvaluationTranslationDataset(year=args.year, split="dev").dump_data()
+        elif args.task.lower() == "judge":
+            if args.dataset in {"wmt24pp", "wmt24++"}:
+                prompts = JudgeTranslationDataset(dataset=args.dataset).dump_data()
+            else:
+                raise ValueError(f"Unsupported dataset for the judge task {args.dataset}")
             print(json.dumps(prompts, indent=2, ensure_ascii=False))
 
     elif args.command == "evaluate":
-        if args.split == "test":
-            print("Testset prompts are not available yet.", file=sys.stderr)
-        print("Devset prompts are not available yet.", file=sys.stderr)
-        # if args.testset.lower() == "mistdev2025":
-        #     dataset = TranslationDataset()
-        #     dataset.load_data()
-        #     prompts = dataset.dump_data()
-
-        #     with open(args.answers, "r", encoding="utf-8") as f:
-        #         outputs = json.load(f)
-
-        #     evaluator = TranslationEvaluator()
-        #     results = evaluator.score(prompts, outputs)
-
-        #     print(results)
-        # else:
-        #     print(f"Unknown testset: {args.testset}")
+        print("Evaluation is not available yet.", file=sys.stderr)
 
     elif args.command == "mock":
-        pass
-        # TODO
+        print("Mock outputs are not available yet.", file=sys.stderr)
 
 if __name__ == "__main__":
     main_cli()

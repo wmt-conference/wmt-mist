@@ -11,16 +11,16 @@ pip3 install git+https://github.com/wmt-conference/wmt-mist
 
 To load the data, use the `load` command and specify the task (`translation`, `reasoning`, `open-ended`, `judge`) and the split (`dev`, `test`):
 ```bash
-wmt-mist load translation dev | jq length
-> 7522
+wmt-mist load translation wmt24pp | jq length
+> 54890
 
-wmt-mist load judge dev | jq length
+wmt-mist load judge wmt24pp | jq length
 > 88605
 ```
 
 The output is a JSON array. Taking a look at the first item for the LLM-as-a-judge task contains the source and the system translation that needs to be scored.
 ```bash
-wmt-mist load judge dev | jq '.[0]'
+wmt-mist load judge wmt24pp | jq '.[0]'
 > {
 >  "prompt": "Given this source '''Už se nudím: Přítel je neschopný''' in cs and translation '''Мені вже нудно: Хлопець нездатний''' in uk, assign a score to the translation on a scale from 0 to 100. Output only the score and nothing else."
 > }
