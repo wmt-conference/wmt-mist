@@ -11,8 +11,8 @@ pip3 install git+https://github.com/wmt-conference/wmt-mist
 
 To load the data, use the `load` command and specify the task (`translation`, `reasoning`, `open-ended`, `judge`) and the split (`dev`, `test`):
 ```bash
-wmt-mist load translation wmt24 | jq length
-> 10301
+wmt-mist load translation wmt24++ | jq length
+> 54890
 
 wmt-mist load judge-translation wmt24 | jq length
 > 87857
@@ -40,6 +40,17 @@ wmt-mist evaluate translation wmt24 my_outputs.json
 ```
 
 TODO
+
+## Task overview
+
+Task|Datasets
+-|-
+|translation|wmt24, wmt24++|
+|open-ended||
+|reasoning||
+|judge-translation|wmt24++|
+|judge-open-ended||
+
 
 ## Contributing
 

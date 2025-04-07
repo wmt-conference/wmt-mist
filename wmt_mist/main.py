@@ -21,7 +21,7 @@ def main_cli():
     parser_load.add_argument(
         "dataset",
         help="Dataset name",
-        choices=["wmt24"]
+        choices=["wmt24", "wmt24++", "wmt24pp"]
     )
 
     # sub-command for evaluating results

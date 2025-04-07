@@ -9,7 +9,7 @@ class TranslationDataset(BaseDataset):
     """
 
     def __init__(self, dataset):
-        if dataset in {"wmt24"}:
+        if dataset in {"wmt24", "wmt24++", "wmt24pp"}:
             # import here to avoid importing by default
             import mt_metrics_eval.data
             import mt_metrics_eval.meta_info
@@ -27,10 +27,8 @@ class TranslationDataset(BaseDataset):
                 )
                 
             data_all = []
-            for lp in mt_metrics_eval.meta_info.DATA["wmt24"].keys():
-                data = mt_metrics_eval.data.EvalSet("wmt24", lp, False)
-                if "esa" not in data.human_score_names:
-                    continue
+            for lp in mt_metrics_eval.meta_info.DATA["wmt24pp"].keys():
+                data = mt_metrics_eval.data.EvalSet("wmt24pp", lp, False)
                 data_all += [
                     {
                         "source": src,
