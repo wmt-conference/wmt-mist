@@ -9,20 +9,39 @@ class TranslationDataset(BaseDataset):
     """
 
     def __init__(self, dataset):
-        if dataset in {"wmt24pp", "wmt24++"}:
+        if dataset in {"wmt24"}:
             # import here to avoid importing by default
-            import datasets
-            datasets.logging.disable_progress_bar()
-            data = []
-            for config in tqdm.tqdm(datasets.get_dataset_config_names("google/wmt24pp"), desc="Loading WMT24++ dataset"):
-                data += list(datasets.load_dataset("google/wmt24pp", config, split="train"))
+            import mt_metrics_eval.data
+            import mt_metrics_eval.meta_info
+            
+            try:
+                mt_metrics_eval.data.EvalSet("wmt24", "en-de", False)
+            except FileNotFoundError:
+                # run `python3 -m mt_metrics_eval.mtme --download` from here
+                import subprocess
+                subprocess.run(
+                    ["python3", "-m", "mt_metrics_eval.mtme", "--download"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    check=True,
+                )
+                
+            data_all = []
+            for lp in mt_metrics_eval.meta_info.DATA["wmt24"].keys():
+                data = mt_metrics_eval.data.EvalSet("wmt24", lp, False)
+                if "esa" not in data.human_score_names:
+                    continue
+                data_all += [
+                    {
+                        "source": src,
+                        "lp": lp,
+                    }
+                    for src in data.src
+                ]
         else:
             raise ValueError(f"Unknown dataset {dataset}")
         
-        self.data = [
-            self.format_prompt(line)
-            for line in data
-        ]
+        self.data = data_all
 
     
     def format_prompt(self, line: Dict[str, Any]) -> str:
@@ -34,4 +53,7 @@ class TranslationDataset(BaseDataset):
 
 
     def dump_data(self) -> List[Dict[str, Any]]:
-        return self.data
+        return [
+            self.format_prompt(line)
+            for line in self.data
+        ]

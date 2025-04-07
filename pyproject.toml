@@ -19,7 +19,8 @@ authors = [
 ]
 keywords = ["evaluation", "multilingual", "natural language generation", "machine translation"]
 dependencies = [
-  "datasets >= 2.18",
+  # TODO: required `pip install git+https://github.com/google-research/mt-metrics-eval.git`
+  # "datasets >= 2.18",
   "iso639 >= 0.1",
 ]
 classifiers = [

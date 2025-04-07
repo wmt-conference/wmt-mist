@@ -16,12 +16,12 @@ def main_cli():
     parser_load.add_argument(
         "task",
         help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge"]
+        choices=["translation", "open-ended", "reasoning", "judge-translation"]
     )
     parser_load.add_argument(
         "dataset",
         help="Dataset name",
-        choices=["wmt24pp", "wmt24++"]
+        choices=["wmt24"]
     )
 
     # sub-command for evaluating results
@@ -29,12 +29,12 @@ def main_cli():
     parser_eval.add_argument(
         "task",
         help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge"]
+        choices=["translation", "open-ended", "reasoning", "judge-translation"]
     )
     parser_eval.add_argument(
         "dataset",
         help="Dataset name",
-        choices=["wmt24pp", "wmt24++"]
+        choices=["wmt24"]
     )
     parser_eval.add_argument("answers", help="Path to JSON file with model outputs")
 
@@ -43,12 +43,12 @@ def main_cli():
     parser_mock.add_argument(
         "task",
         help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge"]
+        choices=["translation", "open-ended", "reasoning", "judge-translation"]
     )
     parser_mock.add_argument(
         "dataset",
         help="Dataset name",
-        choices=["wmt24pp", "wmt24++"]
+        choices=["wmt24"]
     )
 
     args = parser.parse_args()
@@ -62,11 +62,8 @@ def main_cli():
             print("TODO")
         elif args.task.lower() == "reasoning":
             print("TODO")
-        elif args.task.lower() == "judge":
-            if args.dataset in {"wmt24pp", "wmt24++"}:
-                prompts = JudgeTranslationDataset(dataset=args.dataset).dump_data()
-            else:
-                raise ValueError(f"Unsupported dataset for the judge task {args.dataset}")
+        elif args.task.lower() == "judge-translation":
+            prompts = JudgeTranslationDataset(dataset=args.dataset).dump_data()
             print(json.dumps(prompts, indent=2, ensure_ascii=False))
 
     elif args.command == "evaluate":
