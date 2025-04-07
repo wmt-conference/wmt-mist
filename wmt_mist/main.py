@@ -1,76 +1,50 @@
 import argparse
 import json
 import sys
+from wmt_mist.datasets.base import BaseDataset
 from wmt_mist.datasets.judge_translation import JudgeTranslationDataset
-from .datasets.translation import TranslationDataset
-from .evaluators.translation import TranslationEvaluator
+from wmt_mist.datasets.translation import TranslationDataset
 
 def main_cli():
     parser = argparse.ArgumentParser(
         description="WMT MIST scoring"
     )
-    subparsers = parser.add_subparsers(dest="command", help="Sub-command to run")
-
-    # sub-command for loading data
-    parser_load = subparsers.add_parser("load", help="Load prompts for a given testset")
-    parser_load.add_argument(
-        "task",
-        help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge-translation"]
+    parser.add_argument(
+        "-t", "--task",
+        help="Dataset/task name",
+        choices=["wmt24metrics", "wmt24++", "mist25dev", "mist25"],
+        required=True,
     )
-    parser_load.add_argument(
-        "dataset",
-        help="Dataset name",
-        choices=["wmt24", "wmt24++", "wmt24pp"]
+    parser.add_argument(
+        "-o", "--output",
+        help="Model outputs to evaluate"
     )
-
-    # sub-command for evaluating results
-    parser_eval = subparsers.add_parser("evaluate", help="Score outputs for a given testset")
-    parser_eval.add_argument(
-        "task",
-        help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge-translation"]
-    )
-    parser_eval.add_argument(
-        "dataset",
-        help="Dataset name",
-        choices=["wmt24"]
-    )
-    parser_eval.add_argument("answers", help="Path to JSON file with model outputs")
-
-    # sub-command for mock outputs
-    parser_mock = subparsers.add_parser("mock", help="Score outputs for a given testset")
-    parser_mock.add_argument(
-        "task",
-        help="Name of the task",
-        choices=["translation", "open-ended", "reasoning", "judge-translation"]
-    )
-    parser_mock.add_argument(
-        "dataset",
-        help="Dataset name",
-        choices=["wmt24"]
+    parser.add_argument(
+        "-m", "--mock",
+        help="Generate mock model outputs"
     )
 
     args = parser.parse_args()
 
+    if args.output is None:
+        print(json.dumps(load_prompts(args.task), indent=2, ensure_ascii=False))
+    else:
+        print("Evaluation of outputs is not available yet.", file=sys.stderr)
 
-    if args.command == "load":        
-        if args.task.lower() == "translation":
-            prompts = TranslationDataset(dataset=args.dataset).dump_data()
-            print(json.dumps(prompts, indent=2, ensure_ascii=False))
-        elif args.task.lower() == "open-ended":
-            print("TODO")
-        elif args.task.lower() == "reasoning":
-            print("TODO")
-        elif args.task.lower() == "judge-translation":
-            prompts = JudgeTranslationDataset(dataset=args.dataset).dump_data()
-            print(json.dumps(prompts, indent=2, ensure_ascii=False))
 
-    elif args.command == "evaluate":
-        print("Evaluation is not available yet.", file=sys.stderr)
+def load_prompts(task):
+    if task in {"wmt24", "wmt24++"}:
+        return TranslationDataset(dataset=task).dump_data()
+    elif task in {"wmt24metrics"}:
+        return JudgeTranslationDataset(task=task).dump_data()
+    elif task in {"mist25dev"}:
+        return (
+            TranslationDataset(dataset="wmt24++").dump_data()+
+            JudgeTranslationDataset(task="wmt24metrics").dump_data()
+        )
+    else:
+        print("Task is not available.", file=sys.stderr)
 
-    elif args.command == "mock":
-        print("Mock outputs are not available yet.", file=sys.stderr)
 
 if __name__ == "__main__":
     main_cli()

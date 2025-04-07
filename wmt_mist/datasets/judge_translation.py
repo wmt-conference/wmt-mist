@@ -7,8 +7,8 @@ class JudgeTranslationDataset(BaseDataset):
     Skeleton class to handle General MT dataset.
     """
 
-    def __init__(self, dataset):
-        if dataset in {"wmt24"}:
+    def __init__(self, task):
+        if task in {"wmt24metrics"}:
             # import here to avoid importing by default
             import mt_metrics_eval.data
             import mt_metrics_eval.meta_info
@@ -26,8 +26,9 @@ class JudgeTranslationDataset(BaseDataset):
                 )
                 
             data_all = []
-            for lp in mt_metrics_eval.meta_info.DATA["wmt24"].keys():
-                data = mt_metrics_eval.data.EvalSet("wmt24", lp, False)
+            task = task.removesuffix("metrics")
+            for lp in mt_metrics_eval.meta_info.DATA[task].keys():
+                data = mt_metrics_eval.data.EvalSet(task, lp, False)
                 if "esa" not in data.human_score_names:
                     continue
                 scores = data.Scores("seg", "esa")
@@ -44,7 +45,7 @@ class JudgeTranslationDataset(BaseDataset):
                     ]
                 data_all = [x for x in data_all if x["score"] is not None]
         else:
-            raise ValueError(f"Unknown dataset {dataset}")
+            raise ValueError(f"Unknown dataset/task {task}")
         
         self.data = data_all
 

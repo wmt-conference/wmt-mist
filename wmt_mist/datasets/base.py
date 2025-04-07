@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class BaseDataset(ABC):
     """
-    Abstract base class for dataset handling. 
+    Base class for dataset handling. 
     """
 
     @abstractmethod
