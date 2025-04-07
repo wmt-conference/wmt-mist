@@ -48,6 +48,7 @@ class JudgeTranslationDataset(BaseDataset):
             raise ValueError(f"Unknown dataset/task {task}")
         
         self.data = data_all
+        self.task = task
 
     
     def format_prompt(self, line: Dict[str, Any]) -> str:
@@ -55,7 +56,10 @@ class JudgeTranslationDataset(BaseDataset):
         line["lang1"] = wmt_mist.utils.get_language_name(lang1)
         line["lang2"] = wmt_mist.utils.get_language_name(lang2)
 
-        return "Consider this source \'\'\'{source}\'\'\' in {lang1} and this translation \'\'\'{target}\'\'\' in {lang2}. Assess the translation quality from 0% to 100%.".format(**line)
+        return {
+            "prompt": "Consider this source \'\'\'{source}\'\'\' in {lang1} and this translation \'\'\'{target}\'\'\' in {lang2}. Assess the translation quality from 0% to 100%.".format(**line),
+            "task": self.task,
+        }
 
 
     def dump_data(self) -> List[Dict[str, Any]]:

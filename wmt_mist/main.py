@@ -34,12 +34,12 @@ def main_cli():
 
 def load_prompts(task):
     if task in {"wmt24", "wmt24++"}:
-        return TranslationDataset(dataset=task).dump_data()
+        return TranslationDataset(task=task).dump_data()
     elif task in {"wmt24metrics"}:
         return JudgeTranslationDataset(task=task).dump_data()
     elif task in {"mist25dev"}:
         return (
-            TranslationDataset(dataset="wmt24++").dump_data()+
+            TranslationDataset(task="wmt24++").dump_data()+
             JudgeTranslationDataset(task="wmt24metrics").dump_data()
         )
     else:
